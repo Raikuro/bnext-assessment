@@ -6,21 +6,28 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { GetContactsDto } from './dto/get-contacts.dto';
 import { Contact } from './entity/contact.entity';
 import { GetCommonContactsDto } from './dto/get-common-contacts.dto';
+import { HttpModule, HttpService } from '@nestjs/common';
+import { AxiosResponse } from 'axios';
+import * as NEUTRINO_CONFIG from '../../neutrino-config.json'
+import { of } from 'rxjs';
 
 jest.mock('./users.service');
 
 describe('UsersController', () => {
     let usersController: UsersController;
     let usersService: UsersService;
+    let httpService: HttpService;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
             controllers: [UsersController],
             providers: [UsersService],
+            imports: [HttpModule]
         }).compile();
 
         usersService = module.get<UsersService>(UsersService);
         usersController = module.get<UsersController>(UsersController);
+        httpService = module.get<HttpService>(HttpService);
     });
 
     describe('createUser', () => {
@@ -32,10 +39,45 @@ describe('UsersController', () => {
             const createUserDto: CreateUserDto = {
                 "name": "Julio",
                 "lastName": "Gracia",
-                "Phone": "222222222"
+                "phone": "222222222"
             }
+
+            const response: AxiosResponse<any> = {
+                data: { "valid": true },
+                headers: {},
+                config: { url: NEUTRINO_CONFIG['url'] },
+                status: 200,
+                statusText: 'OK',
+            };
+
+            jest.spyOn(httpService, "post").mockImplementation(() => of(response))
             jest.spyOn(usersService, 'create').mockImplementation(() => Promise.resolve(result));
             expect(await usersController.createUser(createUserDto)).toBe(result);
+        });
+
+        it('shouldRespond400IfPhoneIsNotValid', async () => {
+            const createUserDto: CreateUserDto = {
+                "name": "Julio",
+                "lastName": "Gracia",
+                "phone": "222222222"
+            }
+
+            const response: AxiosResponse<any> = {
+                data: { "valid": false },
+                headers: {},
+                config: { url: NEUTRINO_CONFIG['url'] },
+                status: 200,
+                statusText: 'OK',
+            };
+
+            jest.spyOn(httpService, "post").mockImplementation(() => of(response))
+            try {
+                await usersController.createUser(createUserDto);
+                fail();
+            } catch (error) {
+                expect(error.status).toBe(400);
+                expect(error.message).toBe('Phone is invalid');
+            }
         });
     });
 
@@ -66,8 +108,75 @@ describe('UsersController', () => {
                     "phone": "000000001"
                 }
             ]
+
+            const response: AxiosResponse<any> = {
+                data: { "valid": true },
+                headers: {},
+                config: { url: NEUTRINO_CONFIG['url'] },
+                status: 200,
+                statusText: 'OK',
+            };
+
+            jest.spyOn(httpService, "post").mockImplementation(() => of(response))
+
             jest.spyOn(usersService, 'addContacts').mockImplementation(() => Promise.resolve(result));
             expect(await usersController.addContacts("222222222", getContactDto)).toBe(result);
+        });
+
+        it('shouldReturn404IfContactPhoneIsNotValid', async () => {
+            const getContactDto: GetContactsDto[] = [
+                {
+                    "contactName": "Contact1",
+                    "phone": "000000000"
+                }
+            ]
+
+            const response: AxiosResponse<any> = {
+                data: { "valid": false },
+                headers: {},
+                config: { url: NEUTRINO_CONFIG['url'] },
+                status: 200,
+                statusText: 'OK',
+            };
+
+            jest.spyOn(httpService, "post").mockImplementation(() => of(response))
+            try {
+                await usersController.addContacts("222222222", getContactDto);
+                fail();
+            } catch (error) {
+                expect(error.status).toBe(400);
+                expect(error.message).toBe('Phone is invalid');
+            }
+        });
+
+        it('shouldReturn404IfAnyContactPhoneIsNotValid', async () => {
+            const getContactDto: GetContactsDto[] = [
+                {
+                    "contactName": "Contact1",
+                    "phone": "000000000"
+                },
+                {
+                    "contactName": "Contact2",
+                    "phone": "000000001"
+                }
+            ]
+
+            const response: AxiosResponse<any> = {
+                data: { "valid": false },
+                headers: {},
+                config: { url: NEUTRINO_CONFIG['url'] },
+                status: 200,
+                statusText: 'OK',
+            };
+
+            jest.spyOn(httpService, "post").mockImplementation(() => of(response))
+            try {
+                await usersController.addContacts("222222222", getContactDto);
+                fail();
+            } catch (error) {
+                expect(error.status).toBe(400);
+                expect(error.message).toBe('Phone is invalid');
+            }
         });
     });
 

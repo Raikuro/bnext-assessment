@@ -30,7 +30,7 @@ describe('UsersService', () => {
             const createUserDto: CreateUserDto = {
                 "name": "Julio",
                 "lastName": "Gracia",
-                "Phone": "222222222"
+                "phone": "222222222"
             }
             jest.spyOn(usersRepository, 'save').mockImplementation(() => Promise.resolve(result));
             expect(await usersService.create(createUserDto)).toBe(result);

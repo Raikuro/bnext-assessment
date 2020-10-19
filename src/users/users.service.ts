@@ -5,7 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { GetCommonContactsDto } from './dto/get-common-contacts.dto';
 import { User } from './entity/user.entity';
 import { Contact } from './entity/contact.entity';
-import { GetContactsDto } from './dto/get-contacts.dto';
+import { AddContactsDto } from './dto/add-contacts.dto';
 
 @Injectable()
 export class UsersService {
@@ -29,7 +29,7 @@ export class UsersService {
     return user.contacts;
   }
 
-  async addContacts(userId: string, getContactsDto: GetContactsDto[]): Promise<User> {
+  async addContacts(userId: string, getContactsDto: AddContactsDto[]): Promise<User> {
     const user = await this.usersRepository.findOne(userId, { relations: ['contacts'] });
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
     user.contacts = user.contacts ? user.contacts : []

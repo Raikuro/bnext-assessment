@@ -1,0 +1,259 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Bnext-assessment.",
+    "version": "1.0.0",
+    "title": "Bnext-assessment"
+  },
+  "basePath": "/",
+  "paths": {
+    "/users/": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Add a new user",
+        "operationId": "addUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Phone is invalid"
+          }
+        }
+      }
+    },
+    "/users/{id}/contact": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Add contacts to an user",
+        "operationId": "addContact",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User phone",
+            "required": true,
+            "type": "string",
+            "format": "E.164"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddContactsDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "400": {
+            "description": "Phone is invalid"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get contacts from an user",
+        "operationId": "getContacts",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User phone",
+            "required": true,
+            "type": "string",
+            "format": "E.164"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Contact"
+              }
+            }
+          },
+          "400": {
+            "description": "Phone is invalid"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/commoncontact": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get common contacts from two user",
+        "operationId": "getCommonContacts",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GetCommonContactsDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Contact"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "required": [
+        "phone",
+        "name",
+        "lastName"
+      ],
+      "properties": {
+        "phone": {
+          "type": "string",
+          "format": "E.164",
+          "example": "+34605864275"
+        },
+        "name": {
+          "type": "string",
+          "example": "Juan"
+        },
+        "lastname": {
+          "type": "string",
+          "example": "García"
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Contact"
+          }
+        }
+      }
+    },
+    "GetCommonContactsDto": {
+      "type": "object",
+      "required": [
+        "userId1",
+        "userId2"
+      ],
+      "properties": {
+        "userId1": {
+          "type": "string",
+          "format": "E.164",
+          "example": "+34605864275"
+        },
+        "userId2": {
+          "type": "string",
+          "format": "E.164",
+          "example": "+34605864275"
+        }
+      }
+    },
+    "AddContactsDto": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Contact"
+      },
+      "properties": {
+        "userId1": {
+          "type": "string",
+          "format": "E.164",
+          "example": "+34605864275"
+        },
+        "userId2": {
+          "type": "string",
+          "format": "E.164",
+          "example": "+34605864275"
+        }
+      }
+    },
+    "Contact": {
+      "type": "object",
+      "required": [
+        "contactName",
+        "phone"
+      ],
+      "properties": {
+        "contactName": {
+          "type": "string",
+          "example": "Juan"
+        },
+        "phone": {
+          "type": "string",
+          "format": "E.164",
+          "example": "+34605864275"
+        }
+      }
+    }
+  }
+}

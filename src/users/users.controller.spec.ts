@@ -3,7 +3,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from "./entity/user.entity";
 import { CreateUserDto } from './dto/create-user.dto';
-import { GetContactsDto } from './dto/get-contacts.dto';
+import { AddContactsDto } from './dto/add-contacts.dto';
 import { Contact } from './entity/contact.entity';
 import { GetCommonContactsDto } from './dto/get-common-contacts.dto';
 import { HttpModule, HttpService } from '@nestjs/common';
@@ -98,7 +98,7 @@ describe('UsersController', () => {
 
             result.contacts = [contact1, contact2]
 
-            const getContactDto: GetContactsDto[] = [
+            const getContactDto: AddContactsDto[] = [
                 {
                     "contactName": "Contact1",
                     "phone": "000000000"
@@ -124,7 +124,7 @@ describe('UsersController', () => {
         });
 
         it('shouldReturn404IfContactPhoneIsNotValid', async () => {
-            const getContactDto: GetContactsDto[] = [
+            const getContactDto: AddContactsDto[] = [
                 {
                     "contactName": "Contact1",
                     "phone": "000000000"
@@ -150,7 +150,7 @@ describe('UsersController', () => {
         });
 
         it('shouldReturn404IfAnyContactPhoneIsNotValid', async () => {
-            const getContactDto: GetContactsDto[] = [
+            const getContactDto: AddContactsDto[] = [
                 {
                     "contactName": "Contact1",
                     "phone": "000000000"

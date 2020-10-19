@@ -1,4 +1,4 @@
-export class GetContactsDto{
+export class AddContactsDto{
     contactName:string
     phone:string
 }

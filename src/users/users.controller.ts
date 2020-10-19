@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpException, HttpService, HttpStatus, 
 import { Contact } from 'src/users/entity/contact.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetCommonContactsDto } from './dto/get-common-contacts.dto';
-import { GetContactsDto } from './dto/get-contacts.dto';
+import { AddContactsDto } from './dto/add-contacts.dto';
 import { User } from './entity/user.entity';
 import { UsersService } from './users.service';
 import * as NEUTRINO_CONFIG from '../../neutrino-config.json'
@@ -21,13 +21,13 @@ export class UsersController {
   }
 
   @Post(':id/contacts')
-  async addContacts(@Param('id') id: string, @Body() getContactsDto: GetContactsDto[]): Promise<User> {
-    let phoneValidPromises = getContactsDto.map((contactDto) => contactDto.phone).map((phone) => this.checkIfIsPhoneValid(phone));
+  async addContacts(@Param('id') id: string, @Body() addContactsDto: AddContactsDto[]): Promise<User> {
+    let phoneValidPromises = addContactsDto.map((contactDto) => contactDto.phone).map((phone) => this.checkIfIsPhoneValid(phone));
     return Promise.all(phoneValidPromises).then((isValidArray) => {
       if(!isValidArray.every((isValid) => isValid)){
         throw new HttpException('Phone is invalid', HttpStatus.BAD_REQUEST)
       }
-      return this.usersService.addContacts(id, getContactsDto);
+      return this.usersService.addContacts(id, addContactsDto);
     })
   }
   

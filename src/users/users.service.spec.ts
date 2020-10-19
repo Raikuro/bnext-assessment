@@ -5,7 +5,7 @@ import { User } from "./entity/user.entity";
 import { CreateUserDto } from './dto/create-user.dto';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Contact } from './entity/contact.entity';
-import { GetContactsDto } from './dto/get-contacts.dto';
+import { AddContactsDto } from './dto/add-contacts.dto';
 import { GetCommonContactsDto } from './dto/get-common-contacts.dto';
 
 describe('UsersService', () => {
@@ -52,7 +52,7 @@ describe('UsersService', () => {
             contact2.phone = "000000001";
             contact2.contactName = "Contact2";
 
-            const getContactDto: GetContactsDto[] = [
+            const getContactDto: AddContactsDto[] = [
                 {
                     "contactName": "Contact1",
                     "phone": "000000000"
@@ -70,7 +70,7 @@ describe('UsersService', () => {
             expect(await usersService.addContacts("222222222", getContactDto)).toBe(result);
         });
         it('shouldReturn404IfUserNotFound', async () => {
-            const getContactDto: GetContactsDto[] = [
+            const getContactDto: AddContactsDto[] = [
                 {
                     "contactName": "Contact1",
                     "phone": "000000000"

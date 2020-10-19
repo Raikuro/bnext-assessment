@@ -69,6 +69,28 @@ describe('UsersService', () => {
             
             expect(await usersService.addContacts("222222222", getContactDto)).toBe(result);
         });
+        it('shouldReturn404IfUserNotFound', async () => {
+            const getContactDto: GetContactsDto[] = [
+                {
+                    "contactName": "Contact1",
+                    "phone": "000000000"
+                },
+                {
+                    "contactName": "Contact2",
+                    "phone": "000000001"
+                }
+            ]
+
+            jest.spyOn(usersRepository, 'findOne').mockImplementation(() => Promise.resolve(undefined));
+
+            try {
+                await usersService.addContacts("222222222", getContactDto);
+                fail();
+            } catch (error) {
+                expect(error.status).toBe(404);
+                expect(error.message).toBe('User not found');
+            }
+        });
     });
 
     describe('commonContacts', () => {
@@ -105,6 +127,18 @@ describe('UsersService', () => {
             expected[0].contactName = "Contact1";
 
             expect(await usersService.getContacts("222222222")).toStrictEqual(expected);
+        });
+
+        it('shouldReturn404IfUserNotFound', async () => {
+            jest.spyOn(usersRepository, 'findOne').mockImplementation(() => Promise.resolve(undefined));
+
+            try {
+                await usersService.getContacts("222222222");
+                fail();
+            } catch (error) {
+                expect(error.status).toBe(404);
+                expect(error.message).toBe('User not found');
+            }
         });
     });
 });

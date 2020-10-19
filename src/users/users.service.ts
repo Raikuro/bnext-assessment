@@ -48,18 +48,4 @@ export class UsersService {
       'uc1.user='+ getCommonContactsDto.userId1 +' AND '+
       'uc2.user='+ getCommonContactsDto.userId2 +') commonContacts WHERE commonContacts.contact=c.phone;');
   }
-
-  /**********/
-
-  async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
-  }
-
-  findOne(id: string): Promise<User> {
-    return this.usersRepository.findOne(id);
-  }
-
-  async remove(id: string): Promise<void> {
-    await this.usersRepository.delete(id);
-  }
 }

@@ -53,21 +53,4 @@ export class UsersController {
     }).toPromise();
     return neutrinoCall.data['valid'];
   }
-
-  /*****/
-
-  @Get()
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.usersService.findOne(id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.usersService.remove(id);
-  }
 }
